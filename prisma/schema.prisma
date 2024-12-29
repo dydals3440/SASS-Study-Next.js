@@ -11,11 +11,87 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+enum Plan {
+  FREE
+  PRO
+}
 
-  @@index([name])
+model User {
+  id            String      @id @default(cuid())
+  externalId    String?     @unique
+
+  quotaLimit    Int
+  plan          Plan        @default(FREE)
+
+  email         String      @unique
+  apiKey        String      @unique @default(cuid())
+  discordId     String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  // 1:N  관계
+  EventCategories EventCategory[]
+  Event           Event[]
+  Quota           Quota[]
+
+  // 빠르게 찾을 수 있게 인덱스 처리
+  @@index([email, apiKey])
+}
+
+model EventCategory {
+  id            String      @id @default(cuid())
+  // SALE SIGNUP 등등..
+  name          String   
+  color         Int   
+  emoji         String?
+  // 유저에 연결
+  user          User    @relation(fields: [userId], references: [id])
+  userId        String  
+
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  events        Event[]
+
+  @@unique([name, userId])
+}
+
+enum DeliveryStatus {
+  PENDING
+  DELIVERED
+  FAILED
+}
+
+model Event {
+  id                 String      @id @default(cuid())
+  formattedMessage   String
+
+  user              User        @relation(fields: [userId], references: [id])
+  userId            String
+
+  name              String
+  fields            Json
+
+  deliveryStatus    DeliveryStatus  @default(PENDING)
+
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  EventCategory   EventCategory? @relation(fields: [eventCategoryId], references: [id])
+  eventCategoryId String?
+
+  @@index([createdAt])
+}
+
+model Quota {
+  id     String @id @default(cuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique
+
+  // year, month, count
+  year  Int
+  month Int
+  // how many request (each new period)
+  count Int @default(0)
+
+  updatedAt DateTime @updatedAt
 }

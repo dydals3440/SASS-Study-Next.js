@@ -3,7 +3,7 @@ import { Check, Star } from "lucide-react"
 import { ShinyButton } from "@/components/shiny-button"
 import { Heading } from "@/components/heading"
 import { MockDiscordUI } from "@/components/mock-discord-ui"
-import { AnimatedList, AnimatedListItem } from "@/components/ui/animated-list"
+import { AnimatedList } from "@/components/ui/animated-list"
 import { DiscordMessage } from "@/components/discord-message"
 import Image from "next/image"
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
@@ -338,9 +338,9 @@ const Page = () => {
               </div>
               {/* text-pretty -> text wrap */}
               <p className="text-base sm:text-lg lg:text-lg/8 font-medium tracking-tight text-brand-950 text-center lg:text-left text-pretty">
-                PingPanda's been paying off for our Sass. Nice to have simple
-                way to see how we're doing day-to-day. Definitely makes our
-                lives easier.
+                PingPanda&apos;s been paying off for our Sass. Nice to have
+                simple way to see how we&apos;re doing day-to-day. Definitely
+                makes our lives easier.
               </p>
 
               <div className="flex flex-col justify-center lg:justify-start sm:flex-row items-center sm:items-start gap-4 mt-2">
